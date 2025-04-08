@@ -16,17 +16,17 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import ru.yandexpraktikum.blechat.domain.bluetooth.BLEClientController
+import ru.yandexpraktikum.blechat.domain.bluetooth.BleClientController
 import ru.yandexpraktikum.blechat.domain.model.ScannedBluetoothDevice
 import ru.yandexpraktikum.blechat.utils.checkForConnectPermission
 import javax.inject.Inject
 
-class BLEClientControllerImpl @Inject constructor(
+class BleClientControllerImpl @Inject constructor(
     @ApplicationContext private val context: Context,
     private val bluetoothAdapter: BluetoothAdapter?,
     private val locationManager: LocationManager,
     private val viewModelScope: CoroutineScope,
-): BLEClientController {
+): BleClientController {
 
     private val bleScanner by lazy {
         bluetoothAdapter?.bluetoothLeScanner
