@@ -2,6 +2,8 @@ package ru.yandexpraktikum.blechat.data.bluetooth
 
 import android.Manifest
 import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothGatt
+import android.bluetooth.BluetoothGattCallback
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
 import android.content.Context
@@ -27,6 +29,9 @@ class BleClientControllerImpl @Inject constructor(
     private val locationManager: LocationManager,
     private val viewModelScope: CoroutineScope,
 ): BleClientController {
+
+    private var currentGatt: BluetoothGatt? = null
+    private val gattCallback = object : BluetoothGattCallback() {}
 
     private val bleScanner by lazy {
         bluetoothAdapter?.bluetoothLeScanner
@@ -146,7 +151,11 @@ class BleClientControllerImpl @Inject constructor(
     }
 
     override fun connectToDevice(device: ScannedBluetoothDevice): Boolean {
-        TODO()
+        val bluetoothDevice = bluetoothAdapter?.getRemoteDevice(device.address)
+        context.checkForConnectPermission {
+            currentGatt = bluetoothDevice?.connectGatt(context, false, gattCallback)
+        }
+        return currentGatt != null
     }
 
     override suspend fun sendMessage(message: String, deviceAddress: String): Boolean {
